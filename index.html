@@ -20,6 +20,7 @@
               id="text-novo-item"
               v-model="textoNovoItem"
               @keyup.enter="salvarNovoItem"
+              maxlength="20"
             />
             <div>
               <input
@@ -29,11 +30,11 @@
               />
               <label for="is-importante"> Importante</label><br />
             </div>
-            <button @click="salvarNovoItem" v-if="textoNovoitem.length >0">
+            <button @click="salvarNovoItem" v-if="textoNovoItem.length > 0">
               Salvar
             </button>
           </div>
-          <p id="contagem"></p>
+          <p id="contagem">{{qtdeDigitada}}/20</p>
         </div>
 
         <div id="list-wrapper">
@@ -98,6 +99,11 @@
               },
             ],
           };
+        },
+        computer: {
+          qtdeDigitada() {
+            return this.textoNovoItem.length;
+          },
         },
       }).mount("#app");
       //montada do div app
