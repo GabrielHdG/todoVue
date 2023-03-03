@@ -14,12 +14,24 @@
         <h1>TODO.LIST</h1>
         <div id="form-wrapper">
           <div id="o-form">
-            <input type="text" id="text-novo-item" />
+            <!--o item do input será salvo na função data'  -->
+            <input
+              type="text"
+              id="text-novo-item"
+              v-model="textoNovoItem"
+              @keyup.enter="salvarNovoItem"
+            />
             <div>
-              <input type="checkbox" id="is-importante" />
+              <input
+                type="checkbox"
+                id="is-importante"
+                v-model="novoItemImportante"
+              />
               <label for="is-importante"> Importante</label><br />
             </div>
-            <button>Salvar</button>
+            <button @click="salvarNovoItem" v-if="textoNovoitem.length >0">
+              Salvar
+            </button>
           </div>
           <p id="contagem"></p>
         </div>
@@ -30,6 +42,7 @@
             class="item"
             v-bind:class="{importante : item.importante, feito: item.feito}"
             v-for="item in lista"
+            v-on:click="item.feito = !item.feito"
           >
             <p class="texto-item" v-text="item.texto"></p>
           </div>
@@ -40,11 +53,32 @@
     <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.js"></script>
     <script>
       Vue.createApp({
+        methods: {
+          //função que armazena os atributos
+          salvarNovoItem() {
+            if (this.textoNovoItem.length > 0) {
+              let novoitem = {
+                //usar getTime é bom para um id de lista pq sempre será um valor diferente
+                id: new Date().getTime,
+                texto: this.textoNovoItem,
+                importante: this.novoItemImportante,
+                feito: false,
+              };
+              this.lista.push(novoitem);
+              this.textoNovoItem = "";
+              this.novoItemImportante = false;
+            }
+          },
+        },
+
         //nova instância do Vue
         data() {
           //objeto retornando data
           //para cada item da lista, é necessário um div
+          //função que retorna os atributos
           return {
+            textoNovoItem: "",
+            novoItemImportante: false,
             lista: [
               {
                 texto: "Item importante",
@@ -65,7 +99,8 @@
             ],
           };
         },
-      }).mount("#app"); //montada do div app
+      }).mount("#app");
+      //montada do div app
     </script>
   </body>
 </html>
